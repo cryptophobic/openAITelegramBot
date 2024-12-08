@@ -47,8 +47,9 @@ def handle_response(user: str, text: str) -> str:
     # return 'I do not understand you!'
 
 async def handle_draw(text: str, update: Update, context: ContextTypes.DEFAULT_TYPE) -> bool:
-    if 'намалюй' in text:
-        images.set_request(text)
+    processed: str = text.lower()[:1000]
+    if 'намалюй' in processed:
+        images.set_request(processed)
         filename = images.get_response()
         print(filename)
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open(filename, 'rb'))
