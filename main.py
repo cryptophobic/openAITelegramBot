@@ -18,7 +18,15 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     await update.message.reply_text('Hello there, nice to meet you! Let\'s chat!')
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text('Just type something and I will respond to you!')
+    user: str = update.message.from_user.username
+
+    await update.message.reply_text(f'''Just type something and I will respond to you!
+    /role <new role> to set the role of assistant
+    current role for {user} is {chat.chat.get_custom_role(user)}
+    current capacity of context is 10
+    current model is {chat.chat.model}
+    conversation history is {'\n'.join(list(map(lambda t: f'\n  request: "{t[0]}"\n  response: "{t[1]}"', chat.chat.user_history[user])))}
+    ''')
 
 async def role_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text: str = update.message.text.replace(f'/role', '').strip()
@@ -26,7 +34,7 @@ async def role_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     user: str = update.message.from_user.username
     print(text, user)
     if len(text) > 0:
-        chat.chat.custom_role[user] = text
+        chat.chat.set_custom_role(user, text)
     await update.message.reply_text(f'Це моя роль для {user} "{chat.chat.get_custom_role(user)}"')
 
 def handle_response(user: str, text: str) -> str:

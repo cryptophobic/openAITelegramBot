@@ -6,6 +6,7 @@ class Chat:
     def __init__(self, context: str = ''):
         self.context = context
         self.client = OpenAIClient()
+        self.client.print_all_models()
         self.chat = OpenAIChat(self.client.client)
 
     def set_request(self, request, user) -> None:
